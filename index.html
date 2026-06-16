@@ -129,6 +129,10 @@
       padding: 2px 10px; border-radius: 9999px;
       white-space: nowrap;
     }
+    .strip-days-pill.o2 {
+      background: rgba(255,255,255,0.20);
+      color: #fff;
+    }
     .strip.o1 .strip-pill {
       display: inline-flex; align-items: center;
       background: #713E11; color: #fff;
@@ -224,6 +228,7 @@
         </svg>
       </span>
       <span style="color:#fff; white-space:nowrap;">Scheduled Maintenance</span>
+      <span class="strip-days-pill o2" id="stripDays2"></span>
       <span class="strip-pill" id="stripPill2">12:00 PM – 6:00 PM UTC &nbsp;·&nbsp; 20 Jun 2026</span>
       <span class="strip-meta">approx. 6h window</span>
     </span>
@@ -323,6 +328,7 @@
       const daysLeft = Math.ceil((MAINTENANCE - new Date()) / (1000 * 60 * 60 * 24));
       document.getElementById('stripText').textContent = 'Scheduled Maintenance';
       document.getElementById('stripDays').textContent = getStripDays(daysLeft);
+      document.getElementById('stripDays2').textContent = getStripDays(daysLeft);
       if (daysLeft <= 2 && daysLeft >= 0) {
         setTimeout(() => document.getElementById('strip').classList.add('visible'), 200);
       } else {
