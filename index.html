@@ -106,59 +106,29 @@
     .strip.o1 .strip-close { color: #A16207; }
     .strip.o1 .strip-close:hover { color: #713E11; }
 
-    /* Option 2 — blue gradient (matches SVG design) */
-    .strip.o2 {
-      background: linear-gradient(90deg, #1C4ED8 0%, #3B81F6 50%, #1C4ED8 100%);
-      border-left: 2px solid #5FA5F9;
-      border-bottom: 1px solid #2463EB;
-      justify-content: center; gap: 10px;
-      font-size: 12px; font-weight: 500; color: #fff;
-    }
-    .strip.o2::after {
-      content: '';
-      position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
-      background: linear-gradient(90deg, #2463EB, #92C5FD 50%, #2463EB);
-    }
     .strip-icon { display:flex; align-items:center; flex-shrink:0; }
     .strip-icon svg { width:18px; height:18px; }
     .strip-days-pill {
       display: inline-flex; align-items: center;
-      background: rgba(113,62,17,0.12);
-      color: #713E11;
+      background: rgba(113,62,17,0.12); color: #713E11;
       font-size: 11px; font-weight: 700;
       padding: 2px 10px; border-radius: 9999px;
       white-space: nowrap;
     }
-    .strip-days-pill.o2 {
-      background: rgba(255,255,255,0.20);
-      color: #fff;
-    }
-    .strip.o1 .strip-pill {
+    .strip .strip-pill {
       display: inline-flex; align-items: center;
       background: #713E11; color: #fff;
       font-size: 11px; font-weight: 700;
       padding: 2px 10px; border-radius: 9999px;
       letter-spacing: 0.1px; white-space: nowrap;
     }
-    .strip.o1 .strip-meta { color: #A16207; white-space: nowrap; }
-    .strip.o2 .strip-pill {
-      display: inline-flex; align-items: center;
-      background: #DBEAFE; color: #1D40AF;
-      font-size: 11px; font-weight: 700;
-      padding: 2px 10px; border-radius: 9999px;
-      letter-spacing: 0.1px; white-space: nowrap;
-    }
-    .strip.o2 .strip-meta { color: rgba(255,255,255,0.85); white-space: nowrap; }
-    .strip.o2 .strip-close { color: rgba(255,255,255,0.7); }
-    .strip.o2 .strip-close:hover { color: #fff; }
+    .strip .strip-meta { color: #A16207; white-space: nowrap; }
 
-    /* Show strip button + dropdown */
+    /* Show strip button */
     .strip-launcher {
       position: fixed; bottom: 20px; right: 20px; z-index: 50;
-      display: none; flex-direction: column; align-items: flex-end; gap: 8px;
+      display: none;
     }
-    .strip-launcher.open .strip-drop { display: flex; }
-
     .show-strip-btn {
       font-size: 11px; font-weight: 600; color: var(--text-2);
       background: var(--card); border: 1px solid var(--border);
@@ -167,31 +137,7 @@
       transition: border-color .12s, color .12s;
       white-space: nowrap;
     }
-    .show-strip-btn:hover { border-color: var(--brand); color: var(--brand); }
-
-    .strip-drop {
-      display: none;
-      flex-direction: column; gap: 6px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 8px;
-      box-shadow: 0 8px 24px rgba(14,26,51,0.10);
-      min-width: 160px;
-    }
-    .strip-drop-item {
-      display: flex; align-items: center; gap: 10px;
-      padding: 9px 12px; border-radius: 8px; cursor: pointer;
-      border: none; background: none; text-align: left;
-      font-family: inherit; font-size: 12px; font-weight: 600; color: var(--text);
-      transition: background .1s;
-    }
-    .strip-drop-item:hover { background: var(--brand-soft); color: var(--brand); }
-    .strip-drop-item .swatch {
-      width: 28px; height: 14px; border-radius: 4px; flex-shrink: 0;
-    }
-    .swatch-o1 { background: linear-gradient(90deg, #FEF9C3, #FDE68A); border: 1px solid rgba(224,160,48,0.4); }
-    .swatch-o2 { background: linear-gradient(90deg, #1C4ED8, #3B81F6, #1C4ED8); }
+    .show-strip-btn:hover { border-color: var(--amber); color: #A16207; }
 
     @media (prefers-reduced-motion: reduce) {
       * { animation: none !important; transition: none !important; }
@@ -203,50 +149,23 @@
 
   <!-- Top strip -->
   <div class="strip o1" id="strip" role="alert" aria-live="polite">
-    <!-- Option 1 content -->
-    <span class="strip-o1-content" style="display:contents">
-      <span class="strip-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M1.90636 17.215V18.5609C1.90636 19.6758 2.81018 20.5796 3.92509 20.5796H20.0749C21.1899 20.5796 22.0936 19.6758 22.0936 18.5609V17.215H16.0375C16.0375 17.5867 15.7362 17.888 15.3645 17.888H8.63545C8.26381 17.888 7.96254 17.5867 7.96254 17.215H1.90636Z" fill="#713E11"/>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M5.94382 5.10268C5.20054 5.10268 4.598 5.70522 4.598 6.4485V15.8692H3.25218V6.4485C3.25218 4.96195 4.45727 3.75686 5.94382 3.75686H10.9906V5.10268H5.94382Z" fill="#713E11"/>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M16.7104 13.514C19.4976 13.514 21.7572 11.2545 21.7572 8.46723C21.7572 5.67994 19.4976 3.42041 16.7104 3.42041C13.9231 3.42041 11.6635 5.67994 11.6635 8.46723C11.6635 11.2545 13.9231 13.514 16.7104 13.514ZM16.0375 5.77559H17.3833V8.46723H19.402L16.7104 11.4376L14.0187 8.46723H16.0375V5.77559Z" fill="#713E11"/>
-        </svg>
-      </span>
-      <span id="stripText"></span>
-      <span class="strip-days-pill" id="stripDays"></span>
-      <span class="strip-pill">12:00 PM – 6:00 PM UTC &nbsp;·&nbsp; 20 Jun 2026</span>
-      <span class="strip-meta">approx. 6h window</span>
+    <span class="strip-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1.90636 17.215V18.5609C1.90636 19.6758 2.81018 20.5796 3.92509 20.5796H20.0749C21.1899 20.5796 22.0936 19.6758 22.0936 18.5609V17.215H16.0375C16.0375 17.5867 15.7362 17.888 15.3645 17.888H8.63545C8.26381 17.888 7.96254 17.5867 7.96254 17.215H1.90636Z" fill="#713E11"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M5.94382 5.10268C5.20054 5.10268 4.598 5.70522 4.598 6.4485V15.8692H3.25218V6.4485C3.25218 4.96195 4.45727 3.75686 5.94382 3.75686H10.9906V5.10268H5.94382Z" fill="#713E11"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M16.7104 13.514C19.4976 13.514 21.7572 11.2545 21.7572 8.46723C21.7572 5.67994 19.4976 3.42041 16.7104 3.42041C13.9231 3.42041 11.6635 5.67994 11.6635 8.46723C11.6635 11.2545 13.9231 13.514 16.7104 13.514ZM16.0375 5.77559H17.3833V8.46723H19.402L16.7104 11.4376L14.0187 8.46723H16.0375V5.77559Z" fill="#713E11"/>
+      </svg>
     </span>
-
-    <!-- Option 2 content -->
-    <span class="strip-o2-content" style="display:none; align-items:center; gap:10px;">
-      <span class="strip-icon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M1.90636 17.215V18.5609C1.90636 19.6758 2.81018 20.5796 3.92509 20.5796H20.0749C21.1899 20.5796 22.0936 19.6758 22.0936 18.5609V17.215H16.0375C16.0375 17.5867 15.7362 17.888 15.3645 17.888H8.63545C8.26381 17.888 7.96254 17.5867 7.96254 17.215H1.90636Z" fill="#BEDBFE"/>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M5.94382 5.10268C5.20054 5.10268 4.598 5.70522 4.598 6.4485V15.8692H3.25218V6.4485C3.25218 4.96195 4.45727 3.75686 5.94382 3.75686H10.9906V5.10268H5.94382Z" fill="#BEDBFE"/>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M16.7104 13.514C19.4976 13.514 21.7572 11.2545 21.7572 8.46723C21.7572 5.67994 19.4976 3.42041 16.7104 3.42041C13.9231 3.42041 11.6635 5.67994 11.6635 8.46723C11.6635 11.2545 13.9231 13.514 16.7104 13.514ZM16.0375 5.77559H17.3833V8.46723H19.402L16.7104 11.4376L14.0187 8.46723H16.0375V5.77559Z" fill="#BEDBFE"/>
-        </svg>
-      </span>
-      <span style="color:#fff; white-space:nowrap;">Scheduled Maintenance</span>
-      <span class="strip-days-pill o2" id="stripDays2"></span>
-      <span class="strip-pill" id="stripPill2">12:00 PM – 6:00 PM UTC &nbsp;·&nbsp; 20 Jun 2026</span>
-      <span class="strip-meta">approx. 6h window</span>
-    </span>
-
+    <span id="stripText"></span>
+    <span class="strip-days-pill" id="stripDays"></span>
+    <span class="strip-pill">12:00 PM – 6:00 PM UTC &nbsp;·&nbsp; 20 Jun 2026</span>
+    <span class="strip-meta">approx. 6h window</span>
     <button class="strip-close" onclick="hideStrip()" aria-label="Dismiss">✕</button>
   </div>
 
-  <!-- Manual preview control with dropdown -->
+  <!-- Show strip button -->
   <div class="strip-launcher" id="stripLauncher">
-    <div class="strip-drop" id="stripDrop">
-      <button class="strip-drop-item" onclick="pickOption(1)">
-        <span class="swatch swatch-o1"></span> Option 1
-      </button>
-      <button class="strip-drop-item" onclick="pickOption(2)">
-        <span class="swatch swatch-o2"></span> Option 2
-      </button>
-    </div>
-    <button class="show-strip-btn" id="showStripBtn" onclick="toggleDrop()">show strip ▾</button>
+    <button class="show-strip-btn" onclick="showStrip()">show strip</button>
   </div>
 
   <main class="page" id="main" role="main">
@@ -307,7 +226,6 @@
 
   <script>
     const MAINTENANCE = new Date(Date.UTC(2026, 5, 20, 12, 0, 0));
-    let activeOption = 1;
 
     function getStripDays(daysLeft) {
       if (daysLeft === 0) return 'Today';
@@ -315,45 +233,25 @@
       return 'in ' + daysLeft + ' days';
     }
 
-    function applyOption(opt) {
-      const strip = document.getElementById('strip');
-      strip.classList.toggle('o1', opt === 1);
-      strip.classList.toggle('o2', opt === 2);
-      strip.querySelector('.strip-o1-content').style.display = opt === 1 ? 'contents' : 'none';
-      strip.querySelector('.strip-o2-content').style.display = opt === 2 ? 'flex' : 'none';
-      activeOption = opt;
-    }
-
     (function () {
       const daysLeft = Math.ceil((MAINTENANCE - new Date()) / (1000 * 60 * 60 * 24));
       document.getElementById('stripText').textContent = 'Scheduled Maintenance';
       document.getElementById('stripDays').textContent = getStripDays(daysLeft);
-      document.getElementById('stripDays2').textContent = getStripDays(daysLeft);
       if (daysLeft <= 2 && daysLeft >= 0) {
         setTimeout(() => document.getElementById('strip').classList.add('visible'), 200);
       } else {
-        document.getElementById('stripLauncher').style.display = 'flex';
+        document.getElementById('stripLauncher').style.display = 'block';
       }
     })();
 
-    function toggleDrop() {
-      document.getElementById('stripLauncher').classList.toggle('open');
-    }
-    function pickOption(opt) {
-      applyOption(opt);
+    function showStrip() {
       document.getElementById('strip').classList.add('visible');
-      document.getElementById('stripLauncher').classList.remove('open');
       document.getElementById('stripLauncher').style.display = 'none';
     }
     function hideStrip() {
       document.getElementById('strip').classList.remove('visible');
-      document.getElementById('stripLauncher').style.display = 'flex';
+      document.getElementById('stripLauncher').style.display = 'block';
     }
-    // close dropdown when clicking outside
-    document.addEventListener('click', function(e) {
-      const launcher = document.getElementById('stripLauncher');
-      if (!launcher.contains(e.target)) launcher.classList.remove('open');
-    });
   </script>
 </body>
 </html>
