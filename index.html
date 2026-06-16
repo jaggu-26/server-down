@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scheduled Maintenance · GeoServe</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ── GeoServe Design Tokens ── */
+    :root {
+      --brand:      #1852FE;
+      --brand-soft: #EAF1FE;
+      --text:       #0E1A33;
+      --text-2:     #5A6B85;
+      --text-dim:   #626E83;
+      --page-bg:    #F0F2F7;
+      --card:       #FFFFFF;
+      --border:     #E4E9F2;
+      --nav:        #0B1B3A;
+      --amber:      #E0A030;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    .skip-link { position:absolute;top:-100%;left:8px;z-index:9999;background:var(--brand);color:#fff;padding:8px 16px;border-radius:0 0 8px 8px;font-size:13px;font-weight:600;text-decoration:none; }
+    .skip-link:focus { top:0; }
+    :focus-visible { outline:2px solid var(--brand);outline-offset:2px;border-radius:3px; }
+    :focus:not(:focus-visible) { outline:none; }
+
+    html, body {
+      min-height: 100%;
+      font-family: 'Inter', -apple-system, system-ui, sans-serif;
+      font-size: 13px;
+      color: var(--text);
+      background: var(--page-bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Version switch (top-right) ── */
+    .version-switch {
+      position: fixed; top: 18px; right: 22px; z-index: 50;
+      font-size: 12px; font-weight: 600; color: var(--brand);
+      text-decoration: none;
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 7px 14px; border-radius: 9999px;
+      box-shadow: 0 1px 3px rgba(14,26,51,0.06);
+      transition: border-color .12s, color .12s;
+    }
+    .version-switch:hover { border-color: var(--brand); }
+
+    /* ── Single centered column: logo → illustration → content ── */
+    .page {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 48px 20px 56px;
+      gap: 0;
+    }
+
+    .brand img { height: 28px; width: auto; display: block; margin-bottom: 20px; }
+
+    .illus { width: 132px; height: 132px; margin-bottom: 28px; }
+    @media (prefers-reduced-motion: no-preference) {
+      .gear-a { transform-origin: 86px 52px; animation: spin 9s linear infinite; }
+      .gear-b { transform-origin: 112px 84px; animation: spin-r 7s linear infinite; }
+      @keyframes spin   { to { transform: rotate(360deg); } }
+      @keyframes spin-r { to { transform: rotate(-360deg); } }
+    }
+
+    .status-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(224,160,48,0.14);
+      border: 1px solid rgba(224,160,48,0.38);
+      color: #A16207;
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.7px;
+      padding: 5px 12px; border-radius: 9999px;
+      margin-bottom: 18px;
+    }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--amber); position:relative; flex-shrink:0; }
+    .status-dot::after { content:''; position:absolute; inset:-4px; border-radius:50%; background: rgba(224,160,48,0.30); }
+    @media (prefers-reduced-motion: no-preference) {
+      .status-dot::after { animation: pulse 2s ease-in-out infinite; }
+      @keyframes pulse { 0%,100%{transform:scale(1);opacity:.8;} 50%{transform:scale(1.7);opacity:0;} }
+    }
+
+    h1 { font-size: 26px; font-weight: 700; color: var(--text); letter-spacing: -0.4px; line-height: 1.25; margin-bottom: 12px; }
+    .lede { font-size: 12px; line-height: 1.65; color: var(--text); max-width: 46ch; margin: 0 auto 8px; }
+    .eta { font-size: 13px; color: var(--text-dim); margin-bottom: 28px; }
+    .eta strong { color: var(--text); font-weight: 700; }
+
+    .prog-wrap { width: max-content; margin-bottom: 28px; }
+    .prog-head { display:flex; justify-content: center; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+    .prog-head .lbl { font-size: 12px; font-weight: 600; color: var(--text-2); }
+    .prog-head .pct { font-size: 12px; font-weight: 700; color: var(--brand); font-variant-numeric: tabular-nums; }
+    .prog-track { height: 8px; border-radius: 9999px; background: #E2E8F0; overflow: hidden; }
+    .prog-fill { height: 100%; width: 65%; border-radius: 9999px; background: linear-gradient(90deg, #1852FE, #3F8DFF); }
+    .prog-note { font-size: 10.5px; color: var(--text-dim); margin-top: 8px; white-space: nowrap; text-align: center; }
+
+    .btn-cta {
+      height: 44px; padding: 0 24px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #1852FE, #3F8DFF);
+      color:#fff; font-size:14px; font-weight:600;
+      display:inline-flex; align-items:center; gap:9px;
+      text-decoration:none;
+      box-shadow: 0 6px 18px rgba(31,111,235,0.32);
+      transition: opacity .12s;
+    }
+    .btn-cta:hover { opacity:.92; }
+    .btn-cta svg { width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.9; }
+
+    .foot { margin-top: 22px; font-size: 12px; color: var(--text-dim); }
+    .foot a { color: var(--brand); font-weight: 600; text-decoration: none; }
+    .foot a:hover { text-decoration: underline; }
+
+    /* ── Top strip ── */
+    .strip {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: #FEF9C3;
+      border-bottom: 1px solid rgba(224,160,48,0.35);
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 9px 48px;
+      font-size: 12px; font-weight: 500; color: #713E11;
+      transform: translateY(-100%);
+      transition: transform .25s cubic-bezier(0.4,0,0.2,1);
+    }
+    .strip.visible { transform: translateY(0); }
+    .strip-dot { width: 7px; height: 7px; border-radius: 50%; background: #E0A030; flex-shrink: 0; }
+    .strip strong { font-weight: 700; }
+    .strip-close {
+      position: absolute; right: 16px;
+      background: none; border: none; cursor: pointer;
+      font-size: 15px; color: #A16207; line-height: 1;
+      padding: 2px 4px;
+    }
+    .strip-close:hover { color: #713E11; }
+    .show-strip-btn {
+      position: fixed; bottom: 20px; right: 20px; z-index: 50;
+      font-size: 11px; font-weight: 600; color: var(--text-2);
+      background: var(--card); border: 1px solid var(--border);
+      padding: 6px 14px; border-radius: 9999px; cursor: pointer;
+      box-shadow: 0 1px 3px rgba(14,26,51,0.06);
+      transition: border-color .12s, color .12s;
+      display: none;
+    }
+    .show-strip-btn:hover { border-color: var(--brand); color: var(--brand); }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <!-- Top strip -->
+  <div class="strip" id="strip" role="alert" aria-live="polite">
+    <span class="strip-dot"></span>
+    <span id="stripText"></span>
+    <button class="strip-close" onclick="hideStrip()" aria-label="Dismiss">✕</button>
+  </div>
+
+  <!-- Manual preview control (visible when strip won't auto-show) -->
+  <button class="show-strip-btn" id="showStripBtn" onclick="showStrip()">show strip</button>
+
+  <main class="page" id="main" role="main">
+    <a href="#" class="brand" aria-label="GeoServe">
+      <img src="geoserve_logo_color.png" alt="GeoServe">
+    </a>
+
+    <!-- Illustration: gears over a server -->
+    <svg class="illus" viewBox="0 0 132 132" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Server undergoing maintenance">
+      <circle cx="62" cy="74" r="56" fill="#1852FE" opacity="0.08"/>
+      <g>
+        <rect x="22" y="58" width="68" height="22" rx="5" fill="#16315F"/>
+        <rect x="22" y="84" width="68" height="22" rx="5" fill="#16315F"/>
+        <circle cx="32" cy="69" r="2.6" fill="#4ED17E"/>
+        <circle cx="41" cy="69" r="2.6" fill="#4ED17E"/>
+        <circle cx="32" cy="95" r="2.6" fill="#EAB305"/>
+        <circle cx="41" cy="95" r="2.6" fill="#2C4C86"/>
+      </g>
+      <g class="gear-a">
+        <g fill="#3F8DFF">
+          <rect x="83" y="33" width="6" height="9" rx="1.8"/>
+          <rect x="83" y="33" width="6" height="9" rx="1.8" transform="rotate(45 86 52)"/>
+          <rect x="83" y="33" width="6" height="9" rx="1.8" transform="rotate(90 86 52)"/>
+          <rect x="83" y="33" width="6" height="9" rx="1.8" transform="rotate(135 86 52)"/>
+          <rect x="83" y="33" width="6" height="9" rx="1.8" transform="rotate(180 86 52)"/>
+          <rect x="83" y="33" width="6" height="9" rx="1.8" transform="rotate(225 86 52)"/>
+          <rect x="83" y="33" width="6" height="9" rx="1.8" transform="rotate(270 86 52)"/>
+          <rect x="83" y="33" width="6" height="9" rx="1.8" transform="rotate(315 86 52)"/>
+        </g>
+        <circle cx="86" cy="52" r="12" fill="#3F8DFF"/>
+        <circle cx="86" cy="52" r="7.6" fill="#0B1B3A"/>
+        <circle cx="86" cy="52" r="3.6" fill="#3F8DFF"/>
+      </g>
+      <g class="gear-b">
+        <g fill="#EAB305">
+          <rect x="109.75" y="71" width="4.5" height="6" rx="1.4"/>
+          <rect x="109.75" y="71" width="4.5" height="6" rx="1.4" transform="rotate(45 112 84)"/>
+          <rect x="109.75" y="71" width="4.5" height="6" rx="1.4" transform="rotate(90 112 84)"/>
+          <rect x="109.75" y="71" width="4.5" height="6" rx="1.4" transform="rotate(135 112 84)"/>
+          <rect x="109.75" y="71" width="4.5" height="6" rx="1.4" transform="rotate(180 112 84)"/>
+          <rect x="109.75" y="71" width="4.5" height="6" rx="1.4" transform="rotate(225 112 84)"/>
+          <rect x="109.75" y="71" width="4.5" height="6" rx="1.4" transform="rotate(270 112 84)"/>
+          <rect x="109.75" y="71" width="4.5" height="6" rx="1.4" transform="rotate(315 112 84)"/>
+        </g>
+        <circle cx="112" cy="84" r="8.5" fill="#EAB305"/>
+        <circle cx="112" cy="84" r="5.2" fill="#0B1B3A"/>
+        <circle cx="112" cy="84" r="2.6" fill="#EAB305"/>
+      </g>
+    </svg>
+
+    <span class="status-pill"><span class="status-dot"></span> Scheduled Maintenance</span>
+    <h1>We&rsquo;ll be back shortly</h1>
+    <p class="lede">GeoServe is temporarily offline for scheduled maintenance. Your data is safe - no action is needed on your side.</p>
+    <p class="eta"><strong>12:00 PM – 6:00 PM UTC</strong> &nbsp;·&nbsp; 20 Jun 2026 &nbsp;·&nbsp; approx. 6h window</p>
+
+
+  </main>
+
+  <script>
+    const MAINTENANCE = new Date(Date.UTC(2026, 5, 20, 12, 0, 0)); // 20 Jun 2026 12:00 UTC
+
+    function getStripMessage(daysLeft) {
+      if (daysLeft === 2)
+        return 'Scheduled Maintenance in <strong>2 days</strong> &nbsp;·&nbsp; <strong>12:00 PM – 6:00 PM UTC</strong> &nbsp;·&nbsp; 20 Jun 2026 &nbsp;·&nbsp; approx. 6h window';
+      if (daysLeft === 1)
+        return 'Scheduled Maintenance <strong>tomorrow</strong> &nbsp;·&nbsp; <strong>12:00 PM – 6:00 PM UTC</strong> &nbsp;·&nbsp; 20 Jun 2026 &nbsp;·&nbsp; approx. 6h window';
+      if (daysLeft === 0)
+        return 'Maintenance is <strong>happening today</strong> &nbsp;·&nbsp; <strong>12:00 PM – 6:00 PM UTC</strong> &nbsp;·&nbsp; approx. 6h window';
+      return 'Scheduled Maintenance in <strong>' + daysLeft + ' days</strong> &nbsp;·&nbsp; <strong>12:00 PM – 6:00 PM UTC</strong> &nbsp;·&nbsp; 20 Jun 2026 &nbsp;·&nbsp; approx. 6h window';
+    }
+
+    (function () {
+      const daysLeft = Math.ceil((MAINTENANCE - new Date()) / (1000 * 60 * 60 * 24));
+      if (daysLeft <= 2 && daysLeft >= 0) {
+        document.getElementById('stripText').innerHTML = getStripMessage(daysLeft);
+        setTimeout(() => document.getElementById('strip').classList.add('visible'), 200);
+      } else {
+        // Show manual preview button
+        document.getElementById('showStripBtn').style.display = 'block';
+        document.getElementById('stripText').innerHTML = getStripMessage(daysLeft);
+      }
+    })();
+
+    function showStrip() {
+      document.getElementById('strip').classList.add('visible');
+      document.getElementById('showStripBtn').style.display = 'none';
+    }
+    function hideStrip() {
+      document.getElementById('strip').classList.remove('visible');
+      document.getElementById('showStripBtn').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
