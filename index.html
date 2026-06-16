@@ -188,17 +188,46 @@
     .strip.o2 .strip-opt        { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.75); }
     .strip.o2 .strip-opt.active { background: rgba(255,255,255,0.30); color: #fff; }
 
-    /* Show strip button */
-    .show-strip-btn {
+    /* Show strip button + dropdown */
+    .strip-launcher {
       position: fixed; bottom: 20px; right: 20px; z-index: 50;
+      display: none; flex-direction: column; align-items: flex-end; gap: 8px;
+    }
+    .strip-launcher.open .strip-drop { display: flex; }
+
+    .show-strip-btn {
       font-size: 11px; font-weight: 600; color: var(--text-2);
       background: var(--card); border: 1px solid var(--border);
       padding: 6px 14px; border-radius: 9999px; cursor: pointer;
       box-shadow: 0 1px 3px rgba(14,26,51,0.06);
       transition: border-color .12s, color .12s;
-      display: none;
+      white-space: nowrap;
     }
     .show-strip-btn:hover { border-color: var(--brand); color: var(--brand); }
+
+    .strip-drop {
+      display: none;
+      flex-direction: column; gap: 6px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 8px;
+      box-shadow: 0 8px 24px rgba(14,26,51,0.10);
+      min-width: 160px;
+    }
+    .strip-drop-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 12px; border-radius: 8px; cursor: pointer;
+      border: none; background: none; text-align: left;
+      font-family: inherit; font-size: 12px; font-weight: 600; color: var(--text);
+      transition: background .1s;
+    }
+    .strip-drop-item:hover { background: var(--brand-soft); color: var(--brand); }
+    .strip-drop-item .swatch {
+      width: 28px; height: 14px; border-radius: 4px; flex-shrink: 0;
+    }
+    .swatch-o1 { background: linear-gradient(90deg, #FEF9C3, #FDE68A); border: 1px solid rgba(224,160,48,0.4); }
+    .swatch-o2 { background: linear-gradient(90deg, #1C4ED8, #3B81F6, #1C4ED8); }
 
     @media (prefers-reduced-motion: reduce) {
       * { animation: none !important; transition: none !important; }
@@ -243,8 +272,18 @@
     <button class="strip-close" onclick="hideStrip()" aria-label="Dismiss">✕</button>
   </div>
 
-  <!-- Manual preview control -->
-  <button class="show-strip-btn" id="showStripBtn" onclick="showStrip()">show strip</button>
+  <!-- Manual preview control with dropdown -->
+  <div class="strip-launcher" id="stripLauncher">
+    <div class="strip-drop" id="stripDrop">
+      <button class="strip-drop-item" onclick="pickOption(1)">
+        <span class="swatch swatch-o1"></span> Option 1
+      </button>
+      <button class="strip-drop-item" onclick="pickOption(2)">
+        <span class="swatch swatch-o2"></span> Option 2
+      </button>
+    </div>
+    <button class="show-strip-btn" id="showStripBtn" onclick="toggleDrop()">show strip ▾</button>
+  </div>
 
   <main class="page" id="main" role="main">
     <a href="#" class="brand" aria-label="GeoServe">
@@ -336,18 +375,28 @@
       if (daysLeft <= 2 && daysLeft >= 0) {
         setTimeout(() => document.getElementById('strip').classList.add('visible'), 200);
       } else {
-        document.getElementById('showStripBtn').style.display = 'block';
+        document.getElementById('stripLauncher').style.display = 'flex';
       }
     })();
 
-    function showStrip() {
+    function toggleDrop() {
+      document.getElementById('stripLauncher').classList.toggle('open');
+    }
+    function pickOption(opt) {
+      applyOption(opt);
       document.getElementById('strip').classList.add('visible');
-      document.getElementById('showStripBtn').style.display = 'none';
+      document.getElementById('stripLauncher').classList.remove('open');
+      document.getElementById('stripLauncher').style.display = 'none';
     }
     function hideStrip() {
       document.getElementById('strip').classList.remove('visible');
-      document.getElementById('showStripBtn').style.display = 'block';
+      document.getElementById('stripLauncher').style.display = 'flex';
     }
+    // close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+      const launcher = document.getElementById('stripLauncher');
+      if (!launcher.contains(e.target)) launcher.classList.remove('open');
+    });
   </script>
 </body>
 </html>
