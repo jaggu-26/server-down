@@ -173,21 +173,6 @@
     .strip.o2 .strip-close { color: rgba(255,255,255,0.7); }
     .strip.o2 .strip-close:hover { color: #fff; }
 
-    /* Option toggle pills (top-left) */
-    .strip-toggle {
-      position: absolute; left: 16px;
-      display: flex; gap: 4px; align-items: center;
-    }
-    .strip-opt {
-      font-size: 10px; font-weight: 700; letter-spacing: 0.4px;
-      padding: 2px 8px; border-radius: 9999px; cursor: pointer; border: none;
-      transition: background .12s, color .12s;
-    }
-    .strip.o1 .strip-opt        { background: rgba(113,62,17,0.12); color: #A16207; }
-    .strip.o1 .strip-opt.active { background: #E0A030; color: #fff; }
-    .strip.o2 .strip-opt        { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.75); }
-    .strip.o2 .strip-opt.active { background: rgba(255,255,255,0.30); color: #fff; }
-
     /* Show strip button + dropdown */
     .strip-launcher {
       position: fixed; bottom: 20px; right: 20px; z-index: 50;
@@ -239,12 +224,6 @@
 
   <!-- Top strip -->
   <div class="strip o1" id="strip" role="alert" aria-live="polite">
-    <!-- Option toggle -->
-    <div class="strip-toggle">
-      <button class="strip-opt active" onclick="setStripOption(1)">option1</button>
-      <button class="strip-opt" onclick="setStripOption(2)">option2</button>
-    </div>
-
     <!-- Option 1 content -->
     <span class="strip-o1-content" style="display:contents">
       <span class="strip-dot"></span>
@@ -354,20 +333,12 @@
 
     function applyOption(opt) {
       const strip = document.getElementById('strip');
-      const o1content = strip.querySelector('.strip-o1-content');
-      const o2content = strip.querySelector('.strip-o2-content');
-      const btns = strip.querySelectorAll('.strip-opt');
-
       strip.classList.toggle('o1', opt === 1);
       strip.classList.toggle('o2', opt === 2);
-      o1content.style.display = opt === 1 ? 'contents' : 'none';
-      o2content.style.display = opt === 2 ? 'flex' : 'none';
-      btns[0].classList.toggle('active', opt === 1);
-      btns[1].classList.toggle('active', opt === 2);
+      strip.querySelector('.strip-o1-content').style.display = opt === 1 ? 'contents' : 'none';
+      strip.querySelector('.strip-o2-content').style.display = opt === 2 ? 'flex' : 'none';
       activeOption = opt;
     }
-
-    function setStripOption(opt) { applyOption(opt); }
 
     (function () {
       const daysLeft = Math.ceil((MAINTENANCE - new Date()) / (1000 * 60 * 60 * 24));
