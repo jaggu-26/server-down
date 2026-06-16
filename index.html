@@ -116,27 +116,79 @@
     .foot a { color: var(--brand); font-weight: 600; text-decoration: none; }
     .foot a:hover { text-decoration: underline; }
 
-    /* ── Top strip ── */
+    /* ── Top strip (shared) ── */
     .strip {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      background: #FEF9C3;
-      border-bottom: 1px solid rgba(224,160,48,0.35);
-      display: flex; align-items: center; justify-content: center; gap: 6px;
-      padding: 9px 48px;
-      font-size: 12px; font-weight: 500; color: #713E11;
+      height: 40px;
+      display: flex; align-items: center;
+      padding: 0 48px 0 16px;
       transform: translateY(-100%);
       transition: transform .25s cubic-bezier(0.4,0,0.2,1);
+      overflow: hidden;
     }
     .strip.visible { transform: translateY(0); }
-    .strip-dot { width: 7px; height: 7px; border-radius: 50%; background: #E0A030; flex-shrink: 0; }
-    .strip strong { font-weight: 700; }
+
+    /* Option 1 — amber */
+    .strip.o1 {
+      background: #FEF9C3;
+      border-bottom: 1px solid rgba(224,160,48,0.35);
+      justify-content: center; gap: 6px;
+      font-size: 12px; font-weight: 500; color: #713E11;
+    }
+    .strip.o1 .strip-dot { width: 7px; height: 7px; border-radius: 50%; background: #E0A030; flex-shrink: 0; }
+    .strip.o1 strong { font-weight: 700; color: #713E11; }
     .strip-close {
       position: absolute; right: 16px;
       background: none; border: none; cursor: pointer;
-      font-size: 15px; color: #A16207; line-height: 1;
-      padding: 2px 4px;
+      font-size: 15px; line-height: 1; padding: 2px 4px;
     }
-    .strip-close:hover { color: #713E11; }
+    .strip.o1 .strip-close { color: #A16207; }
+    .strip.o1 .strip-close:hover { color: #713E11; }
+
+    /* Option 2 — blue gradient (matches SVG design) */
+    .strip.o2 {
+      background: linear-gradient(90deg, #1C4ED8 0%, #3B81F6 50%, #1C4ED8 100%);
+      border-left: 2px solid #5FA5F9;
+      border-bottom: 1px solid #2463EB;
+      justify-content: center; gap: 10px;
+      font-size: 12px; font-weight: 500; color: #fff;
+    }
+    .strip.o2::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, #2463EB, #92C5FD 50%, #2463EB);
+    }
+    .strip.o2 .strip-icon { display:flex; align-items:center; flex-shrink:0; }
+    .strip.o2 .strip-icon svg { width:18px; height:18px; }
+    .strip.o2 .strip-pill {
+      display: inline-flex; align-items: center;
+      background: #DBEAFE; color: #1D40AF;
+      font-size: 11px; font-weight: 700;
+      padding: 2px 10px; border-radius: 9999px;
+      letter-spacing: 0.1px; white-space: nowrap;
+    }
+    .strip.o2 .strip-meta { color: rgba(255,255,255,0.85); white-space: nowrap; }
+    .strip.o2 .strip-refresh { display:flex; align-items:center; flex-shrink:0; opacity:0.75; }
+    .strip.o2 .strip-refresh svg { width:14px; height:14px; stroke:#fff; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+    .strip.o2 .strip-close { color: rgba(255,255,255,0.7); }
+    .strip.o2 .strip-close:hover { color: #fff; }
+
+    /* Option toggle pills (top-left) */
+    .strip-toggle {
+      position: absolute; left: 16px;
+      display: flex; gap: 4px; align-items: center;
+    }
+    .strip-opt {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.4px;
+      padding: 2px 8px; border-radius: 9999px; cursor: pointer; border: none;
+      transition: background .12s, color .12s;
+    }
+    .strip.o1 .strip-opt        { background: rgba(113,62,17,0.12); color: #A16207; }
+    .strip.o1 .strip-opt.active { background: #E0A030; color: #fff; }
+    .strip.o2 .strip-opt        { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.75); }
+    .strip.o2 .strip-opt.active { background: rgba(255,255,255,0.30); color: #fff; }
+
+    /* Show strip button */
     .show-strip-btn {
       position: fixed; bottom: 20px; right: 20px; z-index: 50;
       font-size: 11px; font-weight: 600; color: var(--text-2);
@@ -157,13 +209,41 @@
   <a href="#main" class="skip-link">Skip to main content</a>
 
   <!-- Top strip -->
-  <div class="strip" id="strip" role="alert" aria-live="polite">
-    <span class="strip-dot"></span>
-    <span id="stripText"></span>
+  <div class="strip o1" id="strip" role="alert" aria-live="polite">
+    <!-- Option toggle -->
+    <div class="strip-toggle">
+      <button class="strip-opt active" onclick="setStripOption(1)">option1</button>
+      <button class="strip-opt" onclick="setStripOption(2)">option2</button>
+    </div>
+
+    <!-- Option 1 content -->
+    <span class="strip-o1-content" style="display:contents">
+      <span class="strip-dot"></span>
+      <span id="stripText"></span>
+    </span>
+
+    <!-- Option 2 content -->
+    <span class="strip-o2-content" style="display:none; align-items:center; gap:10px;">
+      <span class="strip-icon">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="5" width="14" height="11" rx="1.5" fill="#BEDBFE"/>
+          <path d="M16 10h3l3 3v3h-6v-6z" fill="#BEDBFE"/>
+          <circle cx="6" cy="18" r="1.5" fill="#BEDBFE"/>
+          <circle cx="14" cy="18" r="1.5" fill="#BEDBFE"/>
+        </svg>
+      </span>
+      <span style="color:#fff; white-space:nowrap;">Scheduled Maintenance</span>
+      <span class="strip-pill" id="stripPill2">12:00 PM – 6:00 PM UTC</span>
+      <span class="strip-meta">20 Jun 2026 &nbsp;·&nbsp; approx. 6h window</span>
+      <span class="strip-refresh">
+        <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+      </span>
+    </span>
+
     <button class="strip-close" onclick="hideStrip()" aria-label="Dismiss">✕</button>
   </div>
 
-  <!-- Manual preview control (visible when strip won't auto-show) -->
+  <!-- Manual preview control -->
   <button class="show-strip-btn" id="showStripBtn" onclick="showStrip()">show strip</button>
 
   <main class="page" id="main" role="main">
@@ -223,27 +303,40 @@
   </main>
 
   <script>
-    const MAINTENANCE = new Date(Date.UTC(2026, 5, 20, 12, 0, 0)); // 20 Jun 2026 12:00 UTC
+    const MAINTENANCE = new Date(Date.UTC(2026, 5, 20, 12, 0, 0));
+    let activeOption = 1;
 
     function getStripMessage(daysLeft) {
-      if (daysLeft === 2)
-        return 'Scheduled Maintenance in <strong>2 days</strong> &nbsp;·&nbsp; <strong>12:00 PM – 6:00 PM UTC</strong> &nbsp;·&nbsp; 20 Jun 2026 &nbsp;·&nbsp; approx. 6h window';
-      if (daysLeft === 1)
-        return 'Scheduled Maintenance <strong>tomorrow</strong> &nbsp;·&nbsp; <strong>12:00 PM – 6:00 PM UTC</strong> &nbsp;·&nbsp; 20 Jun 2026 &nbsp;·&nbsp; approx. 6h window';
-      if (daysLeft === 0)
-        return 'Maintenance is <strong>happening today</strong> &nbsp;·&nbsp; <strong>12:00 PM – 6:00 PM UTC</strong> &nbsp;·&nbsp; approx. 6h window';
+      if (daysLeft === 2)  return 'Scheduled Maintenance in <strong>2 days</strong> &nbsp;·&nbsp; <strong>12:00 PM – 6:00 PM UTC</strong> &nbsp;·&nbsp; 20 Jun 2026 &nbsp;·&nbsp; approx. 6h window';
+      if (daysLeft === 1)  return 'Scheduled Maintenance <strong>tomorrow</strong> &nbsp;·&nbsp; <strong>12:00 PM – 6:00 PM UTC</strong> &nbsp;·&nbsp; 20 Jun 2026 &nbsp;·&nbsp; approx. 6h window';
+      if (daysLeft === 0)  return 'Maintenance is <strong>happening today</strong> &nbsp;·&nbsp; <strong>12:00 PM – 6:00 PM UTC</strong> &nbsp;·&nbsp; approx. 6h window';
       return 'Scheduled Maintenance in <strong>' + daysLeft + ' days</strong> &nbsp;·&nbsp; <strong>12:00 PM – 6:00 PM UTC</strong> &nbsp;·&nbsp; 20 Jun 2026 &nbsp;·&nbsp; approx. 6h window';
     }
 
+    function applyOption(opt) {
+      const strip = document.getElementById('strip');
+      const o1content = strip.querySelector('.strip-o1-content');
+      const o2content = strip.querySelector('.strip-o2-content');
+      const btns = strip.querySelectorAll('.strip-opt');
+
+      strip.classList.toggle('o1', opt === 1);
+      strip.classList.toggle('o2', opt === 2);
+      o1content.style.display = opt === 1 ? 'contents' : 'none';
+      o2content.style.display = opt === 2 ? 'flex' : 'none';
+      btns[0].classList.toggle('active', opt === 1);
+      btns[1].classList.toggle('active', opt === 2);
+      activeOption = opt;
+    }
+
+    function setStripOption(opt) { applyOption(opt); }
+
     (function () {
       const daysLeft = Math.ceil((MAINTENANCE - new Date()) / (1000 * 60 * 60 * 24));
+      document.getElementById('stripText').innerHTML = getStripMessage(daysLeft);
       if (daysLeft <= 2 && daysLeft >= 0) {
-        document.getElementById('stripText').innerHTML = getStripMessage(daysLeft);
         setTimeout(() => document.getElementById('strip').classList.add('visible'), 200);
       } else {
-        // Show manual preview button
         document.getElementById('showStripBtn').style.display = 'block';
-        document.getElementById('stripText').innerHTML = getStripMessage(daysLeft);
       }
     })();
 
