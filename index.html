@@ -159,6 +159,14 @@
     }
     .strip.o2 .strip-icon { display:flex; align-items:center; flex-shrink:0; }
     .strip.o2 .strip-icon svg { width:18px; height:18px; }
+    .strip-days-pill {
+      display: inline-flex; align-items: center;
+      background: rgba(113,62,17,0.12);
+      color: #713E11;
+      font-size: 11px; font-weight: 700;
+      padding: 2px 10px; border-radius: 9999px;
+      white-space: nowrap;
+    }
     .strip.o1 .strip-pill {
       display: inline-flex; align-items: center;
       background: #713E11; color: #fff;
@@ -239,6 +247,7 @@
         </svg>
       </span>
       <span id="stripText"></span>
+      <span class="strip-days-pill" id="stripDays"></span>
       <span class="strip-pill">12:00 PM – 6:00 PM UTC &nbsp;·&nbsp; 20 Jun 2026</span>
       <span class="strip-meta">approx. 6h window</span>
     </span>
@@ -333,11 +342,11 @@
     const MAINTENANCE = new Date(Date.UTC(2026, 5, 20, 12, 0, 0));
     let activeOption = 1;
 
-    function getStripMessage(daysLeft) {
-      if (daysLeft === 2) return 'Scheduled Maintenance in <strong>2 days</strong>';
-      if (daysLeft === 1) return 'Scheduled Maintenance <strong>tomorrow</strong>';
-      if (daysLeft === 0) return 'Maintenance is <strong>happening today</strong>';
-      return 'Scheduled Maintenance in <strong>' + daysLeft + ' days</strong>';
+    function getStripMessage(daysLeft) { return 'Scheduled Maintenance'; }
+    function getStripDays(daysLeft) {
+      if (daysLeft === 0) return 'Today';
+      if (daysLeft === 1) return 'Tomorrow';
+      return 'in ' + daysLeft + ' days';
     }
 
     function applyOption(opt) {
@@ -352,6 +361,7 @@
     (function () {
       const daysLeft = Math.ceil((MAINTENANCE - new Date()) / (1000 * 60 * 60 * 24));
       document.getElementById('stripText').innerHTML = getStripMessage(daysLeft);
+      document.getElementById('stripDays').textContent = getStripDays(daysLeft);
       if (daysLeft <= 2 && daysLeft >= 0) {
         setTimeout(() => document.getElementById('strip').classList.add('visible'), 200);
       } else {
