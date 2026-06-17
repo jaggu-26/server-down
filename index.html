@@ -88,12 +88,13 @@
     .strip {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       height: 40px;
-      display: flex; align-items: center; justify-content: center;
+      display: none; align-items: center; justify-content: center;
       gap: 6px; padding: 0 16px;
       background: #FEF9C3;
       border-bottom: 1px solid rgba(224,160,48,0.35);
       font-size: 12px; font-weight: 500; color: #713E11;
     }
+    .strip.visible { display: flex; }
     .strip strong { font-weight: 700; color: #713E11; }
     .strip-icon { display:flex; align-items:center; flex-shrink:0; }
     .strip-icon svg { width:18px; height:18px; }
@@ -111,6 +112,22 @@
       letter-spacing: 0.1px; white-space: nowrap;
     }
     .strip-meta { color: #A16207; white-space: nowrap; }
+    .strip-close {
+      position: absolute; right: 16px;
+      background: none; border: none; cursor: pointer;
+      font-size: 15px; line-height: 1; padding: 2px 4px;
+      color: #A16207;
+    }
+    .strip-close:hover { color: #713E11; }
+    .strip-trigger {
+      position: fixed; bottom: 20px; right: 20px; z-index: 50;
+      font-size: 11px; font-weight: 600; color: var(--text-2);
+      background: var(--card); border: 1px solid var(--border);
+      padding: 6px 14px; border-radius: 9999px; cursor: pointer;
+      box-shadow: 0 1px 3px rgba(14,26,51,0.06);
+      transition: border-color .12s, color .12s;
+    }
+    .strip-trigger:hover { border-color: var(--amber); color: #A16207; }
 
     @media (prefers-reduced-motion: reduce) {
       * { animation: none !important; transition: none !important; }
@@ -132,7 +149,10 @@
     <span class="strip-days-pill" id="stripDays"></span>
     <span class="strip-pill">12:00 PM – 6:00 PM UTC &nbsp;·&nbsp; 20 Jun 2026</span>
     <span class="strip-meta">approx. 6h window</span>
+    <button class="strip-close" onclick="hideStrip()" aria-label="Dismiss">✕</button>
   </div>
+
+  <button class="strip-trigger" id="stripTrigger" onclick="showStrip()">show strip</button>
 
   <main class="page" id="main" role="main">
     <!-- Illustration: gears over a server -->
@@ -193,6 +213,15 @@
       const label = daysLeft === 0 ? 'Today' : daysLeft === 1 ? 'Tomorrow' : 'in ' + daysLeft + ' days';
       document.getElementById('stripDays').textContent = label;
     })();
+
+    function showStrip() {
+      document.getElementById('strip').classList.add('visible');
+      document.getElementById('stripTrigger').style.display = 'none';
+    }
+    function hideStrip() {
+      document.getElementById('strip').classList.remove('visible');
+      document.getElementById('stripTrigger').style.display = 'block';
+    }
   </script>
 
 </body>
